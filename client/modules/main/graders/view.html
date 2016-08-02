@@ -1,0 +1,106 @@
+<!-- Graders -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Graders
+    </h2>
+</div>
+
+<!-- new button -->
+<!--<div class="container text-center"
+     style="margin-bottom: 15px;">
+    <button ng-click="newGrader()"
+            class="btn btn-success">
+        + Add Grader
+    </button>
+</div>-->
+
+<!-- total count -->
+<div class="container text-center">
+    <p ng-if="user.admin">
+        There are <strong>{{graders.length}}</strong> total graders.
+    </p>
+    <p ng-if="user.facilitator">
+        There are <strong>{{graders.length}}</strong> graders in your group.
+    </p>
+</div>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- table -->
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <th ng-repeat="field in fields"
+                class="text-center"
+                style="vertical-align: middle;">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="grader in graders | orderBy:'-created'"
+                ng-init="graderIndex = $index+1">
+                <td ng-repeat="field in fields"
+                    class="text-center"
+                    style="vertical-align: middle;">
+                    <div ng-if="['no', 'group', 'graded essays', 'check scores', 'facilitator', 'admin'].indexOf(field) < 0">
+                        {{grader[field]}}
+                    </div>
+                    <div ng-if="field === 'no'">
+                        {{graderIndex}}
+                    </div>
+                    <div ng-if="field === 'group'">
+                        <span ng-if="grader.group"
+                              uib-tooltip-html="getGroupTooltip(grader.group)"
+                              tooltip-placement="right">
+                            {{grader.group.name}}
+                        </span>
+                    </div>
+                    <div ng-if="field === 'graded essays'">
+                        {{grader.scoresheets}}
+                    </div>
+                    <div ng-if="field === 'check scores'">
+                        {{grader.checkScores}}
+                    </div>
+                    <div ng-if="field === 'facilitator'">
+                        <i ng-if="grader.facilitator"
+                           class="glyphicon glyphicon-ok"></i>
+                    </div>
+                    <div ng-if="field === 'admin'">
+                        <i ng-if="grader.admin"
+                           class="glyphicon glyphicon-ok"></i>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

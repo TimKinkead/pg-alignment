@@ -1,0 +1,221 @@
+<!-- New Grader Modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title">New Score Sheet</h3>
+</div>
+
+<!-- modal body (form) -->
+<div class="modal-body">
+
+    <!-- error message -->
+    <div ng-if="status.errorMessage"
+         class="col-sm-12 alert alert-danger">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{status.errorMessage}}
+    </div>
+
+    <!-- form -->
+    <form class="form-horizontal"
+          style="margin-top: 15px;"
+          name="form"
+          novalidate>
+
+        <!-- grader -->
+        <div ng-if="!user.admin"
+             class="form-group">
+            <label class="col-sm-3 control-label">
+                Grader:
+            </label>
+            <div class="col-sm-4">
+                <input type="text"
+                       name="grader"
+                       value="{{user.name}}"
+                       class="form-control"
+                       required
+                       disabled>
+            </div>
+        </div>
+
+        <!-- graders (admin) -->
+        <div ng-if="user.admin"
+             class="form-group">
+            <label class="col-sm-3 control-label">
+                Graders:
+            </label>
+            <div class="col-sm-4">
+                <select ng-model="params.grader"
+                       class="form-control"
+                       name="grader"
+                       required>
+                    <option ng-repeat="grader in graders | orderBy:name">
+                        {{grader.name}}
+                    </option>
+                </select>
+            </div>
+            <div ng-if="!params.grader"
+                 class="col-sm-4"
+                 style="height: 34px; padding-top: 8px;">
+                <span style="color: blue;">
+                    <i class="glyphicon glyphicon-hand-left"></i>
+                    &nbsp;select a grader
+                </span>
+            </div>
+        </div>
+
+        <!-- student work id -->
+        <div ng-if="params.grader"
+             class="form-group">
+            <label class="col-sm-3 control-label">
+                Student Work Id:
+            </label>
+            <div class="col-sm-4">
+                <input ng-model="params.studentWorkId"
+                       class="form-control"
+                       name="studentWorkId"
+                       placeholder="student work document id"
+                       required>
+            </div>
+            <div ng-if="!params.studentWorkId || !status.getRubric"
+                 class="col-sm-4"
+                 style="height: 34px; padding-top: 8px;">
+                <span ng-style="{color: (!params.studentWorkId) ? 'blue' : 'gray'}">
+                    <i class="glyphicon glyphicon-hand-left"></i>
+                    &nbsp;enter your document id
+                </span>
+            </div>
+        </div>
+
+        <!-- get rubric button -->
+        <div ng-if="params.grader && !status.getRubric"
+             class="form-group">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-4">
+                <button ng-if="!rubric"
+                        ng-click="getRubric()"
+                        class="btn btn-block btn-default"
+                        ng-class="{'btn-success': !form.studentWorkId.$pristine}">
+                    Get Rubric
+                </button>
+            </div>
+            <div ng-if="params.studentWorkId && !params.getRubric"
+                 class="col-sm-4"
+                 style="height: 34px; padding-top: 8px;">
+                <span style="color: blue;">
+                    <i class="glyphicon glyphicon-hand-left"></i>
+                    &nbsp;click this button
+                </span>
+            </div>
+        </div>
+
+        <!-- rubric drop down -->
+        <div ng-if="status.getRubric"
+             class="form-group">
+            <label class="col-sm-3 control-label">
+                Rubric:
+            </label>
+            <div class="col-sm-4">
+                <select ng-model="params.rubric"
+                        class="form-control"
+                        name="rubric"
+                        required>
+                    <option ng-repeat="rubric in rubrics | orderBy:name"
+                            value="{{rubric._id}}">
+                        {{rubric.name}}
+                    </option>
+                </select>
+            </div>
+            <div ng-if="!rubric"
+                 class="col-sm-4"
+                 style="height: 34px; padding-top: 8px;">
+                <span style="color: blue;">
+                    <i class="glyphicon glyphicon-hand-left"></i>
+                    &nbsp;select a rubric
+                </span>
+            </div>
+            <div ng-if="rubric"
+                 class="col-sm-4"
+                 style="height: 34px; padding-top: 8px;">
+                <span style="color: blue;">
+                    <i class="glyphicon glyphicon-hand-down"></i>
+                    &nbsp;score each field below
+                </span>
+            </div>
+        </div>
+
+        <!-- rubric table -->
+        <div ng-if="rubric">
+            <table class="table">
+                <thead>
+                    <th><strong>Scoring Elements</strong></th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="field in rubric.fields"
+                    ng-init="fieldIndex = $index"
+                    ng-style="{'background-color': (rubric.fields[fieldIndex].visible) ? 'lightblue' : ''}">
+                    <td style="width: 15%; vertical-align: middle;"
+                        ng-style="{'font-style': (rubric.fields[fieldIndex].visible) ? 'italic' : 'normal', 'font-weight': (rubric.fields[fieldIndex].visible) ? 'bold' : 'normal'}">
+                        {{field.name|capitalize}}
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <div ng-if="params.score[field.name] && !rubric.fields[fieldIndex].visible">
+                            {{params.score[field.name]}}
+                            <button type="button"
+                                    ng-click="editField(fieldIndex)"
+                                    class="btn btn-xs btn-default"
+                                    style="margin-left: 15px;">
+                                <span style="margin: 0 2px;">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    edit
+                                </span>
+                            </button>
+                        </div>
+                        <div ng-if="rubric.fields[fieldIndex].visible"
+                             class="btn-group-custom"
+                             style="width: 100%; height: 100%;">
+                            <button ng-repeat="detail in field.details"
+                                    ng-click="scoreField(fieldIndex, field.name, detail.score)"
+                                    class="btn"
+                                    ng-class="{active: params.score[field.name] === detail.score}"
+                                    style="white-space: normal; height: 100%;"
+                                    ng-style="{width: (detail.text) ? '21%' : '5%', 'font-size': (detail.text) ? '100%' : '80%'}"
+                                    type="button"
+                                    uib-tooltip="{{(detail.text) ? detail.score : ''}}">
+                                <span ng-style="{margin: (detail.text) ? 'auto' : '-10px'}">
+                                    {{detail.text || detail.score}}
+                                </span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+    <hr>
+
+    <!-- save button -->
+    <button ng-if="rubric"
+            ng-click="click() && save()"
+            class="btn btn-block btn-default"
+            ng-class="{'btn-success': status.formValid}"
+            style="max-width: 25%; margin: auto;"
+            type="submit">
+        Save
+    </button>
+    <p ng-if="status.clicked && !status.formValid"
+       class="help-block text-center"
+       style="color: red;">
+        * please score all fields before saving *
+    </p>
+
+</div>

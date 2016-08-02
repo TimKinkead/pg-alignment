@@ -1,0 +1,306 @@
+<!-- Graded Work -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Essays{{(!user.admin) ? ' ('+user.group.name+')' : ''}}
+    </h2>
+</div>
+
+<!-- grade button -->
+<div ng-if="!status.allEssaysGraded && user.group"
+     class="container text-center"
+     style="margin-bottom: 20px;">
+    <button ui-sref="grade"
+            class="btn btn-lg btn-success">
+        {{!user.scoresheets ? 'Start Grading' : (status.resumeGrading ? 'Resume Grading' : 'Grade Next Essay')}}
+    </button>
+</div>
+
+<!-- all essays graded -->
+<div ng-if="status.allEssaysGraded"
+     class="container">
+     <div class="alert alert-success text-center">
+         All essays have been graded. Thanks for your help!
+     </div>
+</div>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- essay/module filters -->
+<div ng-if="user.admin || user.facilitator"
+     class="container">
+    <div class="form-inline well text-center">
+
+        <!-- essay drop down -->
+        <div class="form-group">
+            <label>Show&nbsp;</label>
+            <select ng-model="status.essayFilterBy"
+                    class="form-control"
+                    name="group"
+                    required>
+                <option ng-repeat="option in essayFilterOptions"
+                        value="{{option}}">
+                    {{option}}
+                </option>
+            </select>
+        </div>
+
+        <!-- module drop down -->
+        <div ng-if="modules && modules.length > 1"
+             class="form-group">
+            <label>&nbsp;for&nbsp;</label>
+            <select ng-model="status.moduleFilterBy"
+                    class="form-control"
+                    name="group"
+                    required>
+                <option value=""
+                        selected>
+                    all modules
+                </option>
+                <option ng-repeat="module in modules"
+                        value="{{module._id}}">
+                    the "{{module.name}}" module
+                </option>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+<!-- total count -->
+<div ng-if="user.admin"
+     class="container text-center">
+    <p>
+        There are <strong>{{essays.length}}</strong> total essays.
+    </p>
+</div>
+
+<!-- spinner -->
+<div ng-if="status.processingEssays"
+     class="spinner">
+</div>
+
+<!-- table -->
+<div ng-if="!status.processingEssays && essays.length && (user.admin || user.facilitator || (user.scoresheets || status.essayFilterBy === 'all essays'))"
+     class="container">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th ng-repeat="field in fields"
+                style="text-align: center; vertical-align: middle;">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="essay in essays | filter : {visible: true} | orderBy : 'id'"
+                ng-init="essayIndex = $index+1">
+                <td ng-repeat="field in fields"
+                    style="text-align: center; vertical-align: middle;">
+
+                    <!-- grader/facilitator/admin fields -->
+                    <div ng-if="field === 'no'">
+                        {{essayIndex}}
+                    </div>
+                    <div ng-if="field === 'id'">
+                        <a href="https://docs.google.com/viewerng/viewer?url={{essay.link}}"
+                           target="_blank">
+                            {{essay.id}}</a>
+                        &nbsp;
+                        <a href="{{essay.link}}"
+                           target="_blank">
+                            <i class="glyphicon glyphicon-download"></i>
+                        </a>
+                    </div>
+                    <div ng-if="field === 'module'">
+                        {{essay.module.name}}
+                    </div>
+
+
+                    <!-- grader fields -->
+                    <div ng-if="field === 'in progress'">
+                        <i ng-if="essay.beingGradedByYou"
+                           class="glyphicon glyphicon-ok"
+                           uib-tooltip="in progress">
+                        </i>
+                    </div>
+                    <div ng-if="field === 'skipped'">
+                        <i ng-if="essay.skippedByYou"
+                           class="glyphicon glyphicon-ok"
+                           uib-tooltip="skipped">
+                        </i>
+                    </div>
+                    <div ng-if="field === 'graded'">
+                        <i ng-if="essay.wasGradedByYou"
+                           class="glyphicon glyphicon-ok"
+                           uib-tooltip="graded">
+                        </i>
+                    </div>
+
+                    <!-- facilitator/admin fields -->
+                    <div ng-if="field === 'being graded by'">
+                        <span uib-tooltip="being graded by {{essay.beingGradedBy}}">
+                            {{essay.beingGradedBy ? essay.beingGradedBy : ''}}
+                        </span>
+                    </div>
+                    <div ng-if="field === 'skipped by'">
+                        <span uib-tooltip="skipped by {{essay.skippedBy}}">
+                            {{essay.skippedBy ? essay.skippedBy : ''}}
+                        </span>
+                    </div>
+                    <div ng-if="field === 'graded by'">
+                        <span uib-tooltip="graded by {{essay.wasGradedBy}}">
+                            {{essay.wasGradedBy ? essay.wasGradedBy : ''}}
+                        </span>
+                    </div>
+                    <div ng-if="field === 'everyone'">
+                        <i ng-if="essay.gradeAll"
+                           class="glyphicon glyphicon-ok"
+                           uib-tooltip="everyone should grade this essay">
+                        </i>
+                    </div>
+
+                    <!-- master score -->
+                    <div ng-if="field === 'master score'">
+                        <div ng-if="user.admin || user.facilitator">
+                            <div ng-if="essay.masterScore && !essay.masterScoreSheet">
+                                <button ui-sref="grade({essay: essay._id, masterScore: true})"
+                                        class="btn btn-xs btn-danger"
+                                        uib-tooltip="please add a master score for this check essay">
+                                    <i class="glyphicon glyphicon-warning-sign"></i>
+                                    &nbsp;add master score
+                                </button>
+                            </div>
+                            <div ng-if="essay.masterScoreSheet">
+                                {{essay.masterScoreSheet.score|averageScore}}
+                                <button ui-sref="grade({scoresheet: essay.masterScoreSheet._id, masterScore: true})"
+                                        class="btn btn-xs btn-info">
+                                    edit master score
+                                </button>
+                            </div>
+                            <div ng-if="user.admin && !essay.masterScore">
+                                <span ui-sref="grade({essay: essay._id, masterScore: true})"
+                                      uib-tooltip="add master score"
+                                      style="cursor: pointer; color: lightgray;">
+                                    +
+                                </span>
+                            </div>
+                        </div>
+                        <div ng-if="!user.admin && !user.facilitator">
+                            <div ng-if="essay.masterScore && essay.wasGradedByYou">
+                                <span ng-if="essay.masterScoreSheet">
+                                    {{essay.masterScoreSheet.score|averageScore}}
+                                    &nbsp;
+                                </span>
+                                <span ng-if="!essay.masterScoreSheet">
+                                    <i class="glyphicon glyphicon-warning-sign"
+                                       uib-tooltip="This essay should have a master score, but it does not.">
+                                    </i>
+                                    &nbsp;
+                                </span>
+                                <button ng-click="checkMasterScore(essay._id)"
+                                        class="btn btn-xs btn-info">
+                                    compare
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- grade field -->
+                    <div ng-if="field === 'grade'">
+                        <div ng-if="(!user.admin && !user.facilitator) || (user.facilitator && !essay.masterScore)">
+                            <span ng-if="essay.yourScoreSheet">
+                                {{essay.yourScoreSheet.score|averageScore}}
+                                &nbsp;
+                            </span>
+                            <button ui-sref="grade({essay: essay._id, scoresheet: essay.yourScoreSheet._id})"
+                                    class="btn btn-sm btn-default"
+                                    ng-class="gradeButtonNgClass(essay)">
+                                {{gradeButtonText(essay)}}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- view details (admin/facilitator) -->
+                    <div ng-if="field === 'details'">
+                        <button ng-click="viewDetails(essay._id)"
+                                class="btn btn-sm btn-default">
+                            view details
+                        </button>
+                    </div>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="!user.admin && !user.facilitator && !status.processingEssays"
+     class="text-center"
+     style="margin-bottom: 20px;">
+    <button ng-if="status.essayFilterBy !== 'all essays'"
+            ng-click="status.essayFilterBy = 'all essays'"
+            class="btn btn-sm btn-default">
+        Show All Essays
+    </button>
+    <button ng-if="status.essayFilterBy === 'all essays'"
+            ng-click="status.essayFilterBy = 'my essays'"
+            class="btn btn-sm btn-default">
+        Hide Ungraded Essays
+    </button>
+</div>
+
+<!--
+<div ng-if="skippedEssays.$resolved && skippedEssays.length"
+     class="container text-center">
+    <hr>
+    <h3 style="color: red;">
+        Skipped Essays
+    </h3>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th>Grader</th>
+            <th>Essay</th>
+            <th>Skip Reason</th>
+        </thead>
+        <tbody ng-repeat="essay in skippedEssays"
+               ui-sref="grade({essay: essay._id})"
+               style="cursor: pointer;"
+               uib-tooltip="click to grade"
+               tooltip-placement="right">
+            <tr ng-repeat="skipObj in essay.skip">
+                <td>{{skipObj.user.name}}</td>
+                <td>{{essay.id}}</td>
+                <td>{{skipObj.reason}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+-->

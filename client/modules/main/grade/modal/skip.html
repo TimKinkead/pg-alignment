@@ -1,0 +1,61 @@
+<!-- skip essay modal -->
+
+<form ng-submit="clickSkip() && form.$valid && skip()"
+      id="form"
+      name="form"
+      novalidate>
+
+    <!-- modal header -->
+    <div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+        <h3 class="modal-title">
+            Skip Essay
+        </h3>
+    </div>
+
+    <!-- modal body -->
+    <div class="modal-body">
+
+        <!-- reason -->
+        <div class="form-group">
+            <label>
+                Reason
+            </label>
+            <input ng-model="params.reason"
+                   class="form-control"
+                   placeholder="why are you skipping this essay?"
+                   required>
+        </div>
+
+        <!-- alert -->
+        <div class="alert alert-info text-center"
+             style="margin-bottom: 5px;">
+            <em>Note:</em> You can get back to skipped essays on the
+            <span class="btn btn-sm btn-default"
+                    style="margin: 0 5px;">
+                <i class="glyphicon glyphicon-file"></i>
+                Essays
+            </span>
+            page.
+        </div>
+
+    </div>
+
+    <!-- modal footer -->
+    <div class="modal-footer">
+        <button type="submit"
+                class="btn btn-block btn-success"
+                style="max-width: 50%; margin: auto;">
+            Skip Essay
+        </button>
+        <p ng-if="status.clicked && !form.$valid"
+           style="color: red; text-align: center; margin-top: 10px;">
+            * please provide a reason *
+        </p>
+    </div>
+
+</form>

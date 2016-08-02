@@ -1,0 +1,95 @@
+<!-- Text -->
+
+<div style="height: 100%; width: 100%; overflow-y: auto; background-color: lightgray;">
+
+    <!-- flex box display -->
+    <div style="display: flex; flex-direction: column;">
+
+        <!-- show prompt -->
+        <div ng-if="!status.hidePrompt"
+             style="margin: 15px 15px 0 15px;">
+
+            <!-- new prompt alert -->
+            <div ng-if="status.newModule"
+                 class="alert alert-success text-center">
+                heads up
+                &nbsp;
+                <i class="glyphicon glyphicon-hand-down"></i>
+                &nbsp;
+                new module
+            </div>
+
+            <!-- prompt -->
+            <h3 style="text-align: center;">
+                Prompt
+                <span ng-if="!status.hidePrompt"
+                      class="badge">
+                    {{docs.essay.module.name}}
+                </span>
+            </h3>
+            <div ng-if="!status.processingEssay"
+                 class="well"
+                 style="margin-bottom: 0;">
+                <p style="margin-bottom: 0;">
+                    {{docs.essay.module.prompt}}
+                </p>
+                <div ng-if="docs.essay.module.promptExtra.length">
+                    <ul style="margin-top: 10px; margin-bottom: 0;">
+                        <li ng-repeat="bullet in docs.essay.module.promptExtra">
+                            {{bullet}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button ng-click="switchPrompt()"
+                    class="btn btn-xs btn-default pull-right"
+                    style="margin: -10px 10px 0 0;">
+                hide prompt
+            </button>
+            <div ng-if="status.processingEssay"
+                 class="spinner-sm"
+                 style="margin: auto;">
+            </div>
+        </div>
+
+        <!-- hide prompt -->
+        <div ng-if="status.hidePrompt"
+             class="text-center">
+            <button ng-click="switchPrompt()"
+                    class="btn btn-xs btn-default"
+                    style="margin: 10px 0 5px 0;">
+                show prompt
+            </button>
+        </div>
+
+        <!-- text -->
+        <h3 ng-if="!status.hidePrompt"
+            style="text-align: center; margin: 20px 15px 5px 15px;">
+            Text
+            <span class="badge">
+                {{docs.essay.id}}
+            </span>
+            <a href="{{docs.essay.link}}"
+               target="_blank">
+                <i class="glyphicon glyphicon-download"
+                   style="font-size: 60%;">
+                </i>
+            </a>
+        </h3>
+        <div ng-if="status.processingEssay"
+             class="spinner-sm"
+             style="margin: auto; margin-top: 5px; z-index: 0;">
+        </div>
+        <iframe ng-if="!status.processingEssay && docs.essay.iframeLink"
+                ng-init="updateIframeHeightDelay(1000)"
+                id="iframe-text"
+                ng-src="{{docs.essay.iframeLink}}"
+                frameborder="0"
+                scrolling="no"
+                height="100%"
+                width="100%"
+                style="flex: 1; z-index: 1; min-height: 600px;">
+        </iframe>
+    </div>
+
+</div>

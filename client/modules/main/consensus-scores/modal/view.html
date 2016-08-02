@@ -1,0 +1,50 @@
+<!-- next essay modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title"
+        style="margin: 20px 15px 5px 15px;">
+        Consensus Score Comparison
+        <div class="badge">
+            {{scoresheets[0].essay.id}}
+        </div>
+        <a href="{{'https://docs.google.com/viewerng/viewer?url='+scoresheets[0].essay.link}}"
+           target="_blank">
+            <i class="glyphicon glyphicon-new-window"
+               style="font-size: 60%;">
+            </i>
+        </a>
+    </h3>
+</div>
+
+<div class="modal-body">
+    <table class="table">
+        <thead>
+            <th ng-repeat="field in fields"
+                class="text-center">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="sheet in scoresheets">
+                <td ng-repeat="field in fields"
+                    class="text-center">
+                    <div ng-if="['grader', 'rubric'].indexOf(field) < 0">
+                        {{sheet.score[field]}}
+                    </div>
+                    <div ng-if="field === 'grader'">
+                        {{sheet.user.name}}
+                    </div>
+                    <div ng-if="field === 'rubric'">
+                        {{sheet.rubric.name}}
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

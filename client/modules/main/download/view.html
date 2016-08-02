@@ -1,0 +1,76 @@
+<!-- Download Page -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Download
+    </h2>
+</div>
+
+<!-- messages -->
+<div ng-if="status.successMessage"
+     class="container"
+     style="max-width: 600px;">
+    <div class="alert alert-success"
+         style="margin: 0 0 20px 0;">
+        <span ng-click="closeSuccessMessage()"
+              class="close">
+            &times
+        </span>
+        {{status.successMessage}}
+    </div>
+</div>
+<div ng-if="status.errorMessage"
+     class="container"
+     style="max-width: 600px;">
+    <div class="alert alert-danger"
+         style="margin: 0 0 20px 0;">
+        <span ng-click="closeErrorMessage()"
+              class="close">
+            &times
+        </span>
+        {{status.errorMessage}}
+    </div>
+</div>
+
+<!-- sections -->
+<div style="display: flex; flex-direction: column;">
+
+    <!-- graded work -->
+    <div style="flex: 1; display: flex; flex-direction: row; align-items: center;">
+        <div style="flex: 1; height: 100%;">
+            <h1 style="text-align: center; margin: 20px;">
+                Graded Work
+            </h1>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; border-left: solid;">
+            <div style="flex: 1;">
+                <button ng-click="downloadGradedWorkCSV()"
+                        class="btn btn-block btn-success"
+                        style="min-width: 300px; margin-bottom: 5px;">
+                    <i class="glyphicon glyphicon-download"></i>&nbsp;
+                    Graded Work (CSV Format)
+                </button>
+            </div>
+            <div style="flex: 1">
+                <button ng-click="downloadGradedWorkTSV()"
+                        class="btn btn-block btn-success"
+                        style="min-width: 300px; margin-bottom: 5px;">
+                    <i class="glyphicon glyphicon-download"></i>&nbsp;
+                    Graded Work (TSV Format)
+                </button>
+            </div>
+            <div style="flex: 1">
+                <button ng-click="downloadGradedWorkSRI()"
+                        class="btn btn-block btn-success"
+                        style="min-width: 300px; margin-bottom: 5px;">
+                    <i class="glyphicon glyphicon-download"></i>&nbsp;
+                    Graded Work (SRI Format)
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

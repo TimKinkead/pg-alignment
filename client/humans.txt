@@ -1,0 +1,17 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Derek Soike -- @dsoike
+    Trevor Selby -- @tselby
+
+# THANKS
+
+	Preva Group
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3,
+    AngularJS, Bootstrap,
+    NodeJS, Express

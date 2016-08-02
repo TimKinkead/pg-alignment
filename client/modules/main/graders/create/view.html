@@ -1,0 +1,84 @@
+<!-- New Grader Modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title">New Grader</h3>
+</div>
+
+<!-- modal body (form) -->
+<div class="modal-body">
+
+    <!-- error message -->
+    <div ng-if="status.errorMessage"
+         class="col-sm-12 alert alert-danger">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{status.errorMessage}}
+    </div>
+
+    <!-- form -->
+    <form class="form-horizontal"
+          style="margin-top: 15px;"
+          name="form" id="form"
+          ng-submit="click() && form.$valid && save()">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                Name:
+            </label>
+            <div class="col-sm-4">
+                <input ng-model="params.firstName"
+                       class="form-control"
+                       name="firstName"
+                       type="text"
+                       placeholder="first name"
+                       required>
+            </div>
+            <div class="col-sm-5">
+                <input ng-model="params.lastName"
+                       class="form-control"
+                       name="lastName"
+                       type="text"
+                       placeholder="last name"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                Email:
+            </label>
+            <div class="col-sm-9">
+                <input ng-model="params.email"
+                       class="form-control"
+                       name="email"
+                       type="email"
+                       ng-pattern="emailRegex"
+                       placeholder="email address"
+                       required>
+            </div>
+        </div>
+        <button type="submit" class="hidden"></button>
+    </form>
+    <hr>
+
+    <!-- register button -->
+    <button ng-click="click() && form.$valid && save()"
+            class="btn btn-block btn-default"
+            ng-class="{'btn-success': (!form.$dirty && !status.clicked) || form.$valid}"
+            style="max-width: 50%; margin: auto;"
+            type="button">
+        Save
+    </button>
+    <p ng-if="status.clicked && !form.$valid"
+       class="help-block text-center"
+       style="color: red;">
+        * first name, last name, and email are required *
+    </p>
+
+</div>

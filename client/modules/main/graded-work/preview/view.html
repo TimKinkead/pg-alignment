@@ -1,0 +1,57 @@
+<!-- preview score sheet modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title">
+        Score Sheet Preview
+    </h3>
+</div>
+
+<!-- modal body -->
+<div class="modal-body">
+
+    <!-- info -->
+    <ul>
+        <li style="margin-bottom: 5px;">
+            <strong>Grader:</strong>
+            {{scoresheet.user.name}}
+        </li>
+        <li style="margin-bottom: 5px;">
+            <strong>Essay:</strong>
+            <a href="{{'https://docs.google.com/viewerng/viewer?url='+scoresheet.essay.link}}" target="_blank">
+                {{scoresheet.essay.id}}
+            </a>
+        </li>
+        <li style="margin-bottom: 5px;">
+            <strong>Rubric:</strong>
+            {{scoresheet.rubric.name}}
+        </li>
+        <li style="margin-bottom: 5px;">
+            <strong>Avg Score:</strong>
+            {{scoresheet.score|averageScore}}
+        </li>
+    </ul>
+
+    <!-- scores -->
+    <table class="table">
+        <thead>
+            <th ng-repeat="field in fields"
+                class="text-center">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr>
+                <td ng-repeat="field in fields"
+                    class="text-center">
+                    {{scoresheet.score[field]}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

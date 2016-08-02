@@ -1,0 +1,135 @@
+<!-- Grade -->
+
+<!-- top controls -->
+<div ng-init="initializeGradeDashboard()"
+     class="text-center"
+     style="height: 65px; padding: 15px; border-top: thin solid; border-bottom: thin solid; background-color: lightblue;">
+
+    <!-- back to essays -->
+    <button ui-sref="essays({essayFilterBy: (params.masterScore) ? 'master scores' : ''})"
+            class="btn btn-default pull-left">
+        <i class="glyphicon glyphicon-arrow-left"></i>
+        &nbsp;back to essays
+    </button>
+
+    <!-- switch sides -->
+    <button ng-click="switchSides()"
+            class="btn btn-default text-center">
+        <i class="glyphicon glyphicon-share-alt"
+           style="transform: rotate(90deg) scaleY(-1);">
+        </i>
+        Switch
+        <i class="glyphicon glyphicon-share-alt"
+           style="transform: rotate(90deg);">
+        </i>
+    </button>
+
+    <!-- next essay -->
+    <!--<button ng-if="params.scoresheet && status.saved && !params.masterScore"
+            ng-click="nextEssay()"
+            class="btn btn-default pull-right"
+            style="margin-left: 5px;">
+        next essay&nbsp;
+        <i class="glyphicon glyphicon-arrow-right"></i>
+    </button>-->
+
+    <!-- save -->
+    <button ng-click="clickSave() && save()"
+            class="btn btn-success pull-right"
+            style="margin-left: 5px;">
+        save
+    </button>
+
+    <!-- skip -->
+    <button ng-if="!params.scoresheet"
+            ng-click="skip()"
+            class="btn btn-default pull-right">
+        skip
+    </button>
+
+</div>
+
+<!-- master score warning -->
+<div ng-if="params.masterScore"
+     class="text-center"
+     style="height: 55px; position: fixed; top: 65px; left: 0; right: 0; bottom: 120px; padding: 15px; border-bottom: thin solid; background-color: yellow;">
+    <div ng-if="!params.scoresheet">
+        <p style="font-weight: bold; font-size: 115%;">
+            You are adding a master score.
+        </p>
+    </div>
+    <div ng-if="params.scoresheet">
+        <p ng-if="docs.scoresheet.user._id.toString() === user._id.toString()"
+           style="font-weight: bold; font-size: 115%;">
+            You are editing a master score.
+        </p>
+        <p ng-if="docs.scoresheet.user._id.toString() !== user._id.toString()"
+           style="font-weight: bold; font-size: 115%;">
+            Warning! You are editing a master score that was added by
+            <span style="text-decoration: underline;">{{docs.scoresheet.user.name}}</span>.
+        </p>
+    </div>
+</div>
+
+<!-- admin add/edit grade -->
+<div ng-if="!params.masterScore && user.admin"
+     class="text-center"
+     style="height: 55px; position: fixed; top: 65px; left: 0; right: 0; bottom: 120px; padding: 10px; border-bottom: thin solid; background-color: yellow;">
+    <div ng-if="!params.scoresheet">
+        <div class="form-inline">
+            <div class="form-group">
+                <label>
+                    Grade this essay for&nbsp;
+                </label>
+                <select ng-model="params.user"
+                        class="form-control">
+                    <option ng-repeat="grader in docs.graders"
+                            value="{{grader._id}}"
+                            class="form-control">
+                        {{grader.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div ng-if="params.scoresheet">
+        <p ng-if="docs.scoresheet.user._id.toString() === user._id.toString()"
+           style="font-weight: bold; font-size: 115%; margin: 5px 0 10px 0;">
+            You are editing your own score as an admin.
+        </p>
+        <p ng-if="docs.scoresheet.user._id.toString() !== user._id.toString()"
+           style="font-weight: bold; font-size: 115%; margin: 5px 0 10px 0;">
+            Warning! You are editing a score that was added by
+            <span style="text-decoration: underline;">{{docs.scoresheet.user.name}}</span>.
+        </p>
+    </div>
+</div>
+
+<!-- resizable divs -->
+<div id="grade-dashboard"
+     style="display: flex; position: fixed; left: 0; right: 0; bottom: 0;"
+     ng-style="{top: (params.masterScore || user.admin) ? '120px' : '65px'}">
+
+    <!-- left side -->
+    <div resizable r-directions="['right']"
+         r-flex="true"
+         class="resizable"
+         r-grabber="<div style='height: 100%; width: 100%; border-left: thin solid; border-right: thin solid; background-color: lightblue;'></div>"
+         style="width: 50%; max-width: 80%; min-width: 200px; background-color: lightgray;">
+
+        <!-- left side content -->
+        <ng-include src="user.rubricSide === 'right' ? 'modules/main/grade/views/text.html' : 'modules/main/grade/views/rubric.html'">
+        </ng-include>
+
+    </div>
+
+    <!-- right side -->
+    <div style="flex: 1; margin-left: 14px; overflow-y: auto;">
+
+        <!-- right side content -->
+        <ng-include src="user.rubricSide === 'right' ? 'modules/main/grade/views/rubric.html' : 'modules/main/grade/views/text.html'">
+        </ng-include>
+
+    </div>
+
+</div>

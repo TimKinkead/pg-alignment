@@ -1,0 +1,110 @@
+<!-- Initialization Page -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px; margin-bottom: 40px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Admin Dashboard
+    </h2>
+</div>
+
+<!-- messages -->
+<div ng-if="status.successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in status.successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="status.errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in status.errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- collections -->
+<div class="container"
+     style="display: flex; flex-direction: column; max-width: 600px;">
+
+    <!-- header -->
+    <div style="flex: 1">
+        <div style="display: flex; flex-direction: row; border-bottom: solid;">
+            <div style="flex: 3;">
+                <h3>
+                    <strong>
+                        Collection
+                    </strong>
+                </h3>
+            </div>
+            <div style="flex: 2; text-align: center;">
+                <h3>
+                    <strong>
+                        Count
+                    </strong>
+                </h3>
+            </div>
+            <div style="flex: 1;">
+                <!-- refresh count -->
+            </div>
+            <div style="flex: 2;">
+                <!-- initialize -->
+            </div>
+        </div>
+    </div>
+
+    <div ng-repeat="collection in collections"
+         style="flex: 1;">
+        <div style="display: flex; flex-direction: row; align-items: center; border-bottom: solid thin;">
+            <div style="flex: 3;">
+                <h3>
+                    {{collection}}
+                </h3>
+            </div>
+            <div style="flex: 2; text-align: center;">
+                <span style="font-size: 150%;">
+                    {{data[collection].count}}
+                </span>
+            </div>
+            <div style="flex: 1;">
+                <button ng-if="!status['counting'+collection]"
+                        ng-click="count(collection)"
+                        class="btn btn-info pull-right">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                </button>
+                <span ng-if="status['counting'+collection]"
+                      class="spinner-sm pull-right">
+                </span>
+            </div>
+            <div style="flex: 2;">
+                <div ng-if="!status['initializing'+collection]">
+                    <button ng-if="initCollections.indexOf(collection) > -1 && (initCollections.indexOf(collection) === 0 || data[initCollections[initCollections.indexOf(collection)-1]].count > 0)"
+                            ng-click="initialize(collection)"
+                            class="btn btn-default pull-right"
+                            ng-class="{'btn-success': !data[collection].count}">
+                        <i class="glyphicon glyphicon-flash"></i>
+                        initialize
+                    </button>
+                </div>
+                <span ng-if="status['initializing'+collection]"
+                      class="spinner-sm pull-right">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+

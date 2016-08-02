@@ -1,0 +1,136 @@
+<!-- Graded Work -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Graded Work
+    </h2>
+</div>
+
+<!-- new button
+<div class="container text-center"
+     style="margin-bottom: 15px;">
+    <button ng-click="newScoreSheet()"
+            class="btn btn-success">
+        + New Score Sheet
+    </button>
+</div> -->
+
+<!-- start grading button -->
+<div class="container text-center"
+     style="margin-bottom: 15px;">
+    <button ui-sref="grade"
+            class="btn btn-success">
+        Start Grading
+    </button>
+</div>
+
+<!-- total count -->
+<div class="container text-center">
+    <p ng-if="!user.admin">
+        You have saved <strong>{{scoresheets.length}}</strong> score sheets.
+    </p>
+    <p ng-if="user.admin">
+        There are <strong>{{scoresheets.length}}</strong> total score sheets.
+    </p>
+</div>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- table -->
+<div ng-if="scoresheets.length"
+     class="container">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th ng-repeat="field in fields">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="sheet in scoresheets | orderBy:'-created'"
+                ng-init="sheetIndex = $index+1"
+                ng-click="editOrView(sheet)"
+                style="cursor: pointer;"
+                uib-tooltip="{{(sheet.user._id === user._id) ? 'click to edit' : 'click to view'}}"
+                tooltip-placement="right">
+                <td ng-repeat="field in fields">
+                    <div ng-if="['no', 'date', 'grader', 'essay', 'rubric', 'score'].indexOf(field) < 0">
+                        {{sheet[field]}}
+                    </div>
+                    <div ng-if="field === 'no'">
+                        {{sheetIndex}}
+                    </div>
+                    <div ng-if="field === 'date'">
+                        {{sheet.created|date:'short'}}
+                    </div>
+                    <div ng-if="field === 'grader'">
+                        {{sheet.user.name}}
+                    </div>
+                    <div ng-if="field === 'essay'">
+                        {{sheet.essay.id}}
+                    </div>
+                    <div ng-if="field === 'rubric'">
+                        {{sheet.rubric.name}}
+                    </div>
+                    <div ng-if="field === 'score'">
+                        {{sheet.score|averageScore}}
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="skippedEssays.$resolved && skippedEssays.length"
+     class="container text-center">
+    <hr>
+    <h3 style="color: red;">
+        Skipped Essays
+    </h3>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th>Grader</th>
+            <th>Essay</th>
+            <th>Skip Reason</th>
+        </thead>
+        <tbody ng-repeat="essay in skippedEssays"
+               ui-sref="grade({essay: essay._id})"
+               style="cursor: pointer;"
+               uib-tooltip="click to grade"
+               tooltip-placement="right">
+            <tr ng-repeat="skipObj in essay.skip">
+                <td>{{skipObj.user.name}}</td>
+                <td>{{essay.id}}</td>
+                <td>{{skipObj.reason}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

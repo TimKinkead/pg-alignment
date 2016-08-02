@@ -1,0 +1,65 @@
+<!-- master score check modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title"
+        style="margin: 20px 15px 5px 15px;">
+        {{user.admin || user.facilitator ? 'Master Score Review' : 'Master Score Comparison'}}
+        <div class="badge">
+            {{essay.id}}
+        </div>
+        <a href="{{'https://docs.google.com/viewerng/viewer?url='+essay.link}}"
+           target="_blank">
+            <i class="glyphicon glyphicon-new-window"
+               style="font-size: 60%;">
+            </i>
+        </a>
+    </h3>
+</div>
+
+<div class="modal-body">
+
+    <!-- warning -->
+    <div ng-if="status.noMasterScore"
+         class="alert alert-danger text-center">
+        This essay should have a master score, but it does not. Please notify your facilitator.
+    </div>
+
+    <!-- scores table -->
+    <table class="table table-bordered"
+           style="background-color: whitesmoke; margin-bottom: 0;">
+        <thead>
+            <th ng-repeat="field in fields"
+                class="text-center"
+                style="vertical-align: middle;"
+                ng-style="{width: ((['grader'].indexOf(field) > -1) ? '20%' : '')}">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="sheet in scoresheets | orderBy: 'masterScore'">
+                <td ng-repeat="field in fields"
+                    class="text-center"
+                    style="vertical-align: middle;">
+                    <div ng-if="['grader', 'rubric', 'avg score'].indexOf(field) < 0">
+                        {{sheet.score[field]}}
+                    </div>
+                    <div ng-if="field === 'grader'">
+                        {{sheet.masterScore ? 'Master Score' : sheet.user.name}}
+                    </div>
+                    <div ng-if="field === 'rubric'">
+                        {{sheet.rubric.name}}
+                    </div>
+                    <div ng-if="field === 'avg score'">
+                        <strong>{{sheet.score|averageScore}}</strong>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,47 @@
+<!-- consensus score modal -->
+
+<!-- modal header -->
+<div class="modal-header">
+    <span ng-click="cancel()"
+          class="close"
+          style="margin: -10px -10px; padding: 10px 10px;">
+        &times;
+    </span>
+    <h3 class="modal-title">
+        Scores Saved!
+    </h3>
+</div>
+
+<div class="modal-body">
+
+    <!-- review consensus scores -->
+    <div style="margin-bottom: 10px;">
+        <p style="text-align: center; margin: 20px 0 10px 0; font-size: 120%;">
+            <strong><em>Someone else has also scored this essay.</em></strong>
+            <br/>
+            Want to review your consensus scores?
+        </p>
+        <button ng-click="reviewConsensusScores()"
+                class="btn btn-lg btn-block btn-info"
+                style="max-width: 50%; margin: auto;">
+            Review Consensus Scores
+        </button>
+    </div>
+
+    <p style="text-align: center; margin: 25px 0 0 0;">
+        - or -
+    </p>
+
+    <!-- next essay -->
+    <div style="margin-bottom: 10px;">
+        <p style="text-align: center; margin: 20px 0 10px 0; font-size: 120%;">
+            Ready to grade another essay?
+        </p>
+        <button ng-click="nextEssay()"
+                class="btn btn-lg btn-block btn-success"
+                style="max-width: 50%; margin: auto;">
+            Grade Another Essay
+        </button>
+    </div>
+
+</div>

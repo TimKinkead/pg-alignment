@@ -1,0 +1,92 @@
+<!-- Graded Work -->
+
+<!-- title -->
+<div class="jumbotron"
+     style="background: #677F71; padding-top: 12px; padding-bottom: 18px;">
+    <h2 class="text-center"
+        style="color: whitesmoke;">
+        Consensus Scores
+    </h2>
+</div>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- table -->
+<div ng-if="scoresheets.length"
+     class="container">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th ng-repeat="field in fields">
+                {{field|capitalize}}
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="sheet in scoresheets | orderBy:['essay.id', 'user.name']"
+                ng-init="sheetIndex = $index+1"
+                style="cursor: pointer;"
+                ng-style="{'border-top': (!scoresheets[sheetIndex-2] || scoresheets[sheetIndex-2].essay.id !== sheet.essay.id) ? 'solid' : ''}"
+                uib-tooltip="click for details"
+                tooltip-placement="right">
+                <td ng-repeat="field in fields"
+                    ng-click="!(field === 'edit' && sheet.user._id === user._id) && viewDetails(sheet.essay.id)">
+                    <div ng-if="['no', 'essay', 'grader', 'date', 'rubric', 'score', 'edit'].indexOf(field) < 0">
+                        {{sheet[field]}}
+                    </div>
+                    <div ng-if="field === 'no'">
+                        {{sheetIndex}}
+                    </div>
+                    <div ng-if="field === 'essay'">
+                        {{sheet.essay.id}}
+                    </div>
+                    <div ng-if="field === 'grader'">
+                        {{sheet.user.name}}
+                    </div>
+                    <div ng-if="field === 'date'">
+                        {{sheet.created|date:'short'}}
+                    </div>
+                    <div ng-if="field === 'rubric'">
+                        {{sheet.rubric.name}}
+                    </div>
+                    <div ng-if="field === 'score'">
+                        {{sheet.score|averageScore}}
+                    </div>
+                    <div ng-if="field === 'edit'">
+                        <button ng-if="sheet.user._id === user._id"
+                                class="btn btn-xs"
+                                ui-sref="grade({scoresheet: sheet._id})">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                            &nbsp;
+                            edit
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

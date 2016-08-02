@@ -1,0 +1,42 @@
+.btn-filter {
+  .btn-default();
+  &.active {
+    .btn-info();
+  }
+}
+
+.btn-group-custom {
+  .btn-group();
+  .btn {
+    .btn-default();
+    &:hover,
+    &:focus,
+    &:visited {
+      color: #fff;
+      background-color: #5cb85c !important;
+      border-color: #4cae4c;
+    }
+    &:active,
+    &.active {
+      color: #fff;
+      background-color: #449d44;
+      border-color: #398439;
+    }
+    float:none;
+  }
+  /*@media(max-width: @screen-xs-max) {
+    .btn-group-vertical();
+    button {
+      width: 100% !important;
+      height: auto !important;
+    }
+  }*/
+}
+
+.btn-group-custom-vertical {
+  .btn-group-vertical();
+  button {
+    width: 100% !important;
+    height: auto !important;
+  }
+}

@@ -1,0 +1,324 @@
+<!-- title -->
+<h2 class="text-center"
+    style="margin-bottom: 15px;">
+    Settings
+</h2>
+
+<!-- success message -->
+<div ng-if="status.successMessage"
+     class="alert alert-success"
+     style="max-width: 500px; margin: auto; margin-bottom: 10px;">
+    <span ng-click="closeSuccessMessage()"
+          class="close">
+        &times
+    </span>
+    {{status.successMessage}}
+</div>
+
+<!-- error message -->
+<div ng-if="status.errorMessage"
+     class="alert alert-danger"
+     style="max-width: 500px; margin: auto; margin-bottom: 10px;">
+    <span ng-click="closeErrorMessage()"
+          class="close">
+        &times
+    </span>
+    {{status.errorMessage}}
+</div>
+
+<!-- outer div for mobile padding -->
+<div style="padding: 0 1px;">
+
+    <!-- container div for form -->
+    <div style="max-width: 500px; margin: auto; padding: 15px; border: 1px solid; border-radius: 5px; background-color: lightblue;">
+
+        <!-- settings form -->
+        <form ng-submit="click() && form.$valid && updateSettings()"
+              ng-if="!status.processing"
+              name="form"
+              novalidate>
+
+            <!-- first name -->
+            <div class="form-group">
+                <label>first name</label>
+                <div style="padding: 1px;">
+                    <input ng-if="status.editFirstName"
+                           type="text"
+                           name="firstName"
+                           ng-model="fullUser.firstName"
+                           class="form-control"
+                           placeholder="first name"
+                           required>
+                    <div ng-if="!status.editFirstName"
+                         class="form-inline">
+                        <input type="text"
+                               name="firstName"
+                               ng-model="fullUser.firstName"
+                               class="form-control"
+                               style="width: 90%;"
+                               placeholder="first name"
+                               disabled>
+                        <button ng-click="status.editFirstName = true;"
+                                class="btn btn-default"
+                                style="max-width: 10%;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- last name -->
+            <div class="form-group">
+                <label>last name</label>
+                <div style="padding: 1px;">
+                    <input ng-if="status.editLastName"
+                           type="text"
+                           name="lastName"
+                           ng-model="fullUser.lastName"
+                           class="form-control"
+                           placeholder="last name"
+                           required>
+                    <div ng-if="!status.editLastName"
+                         class="form-inline">
+                        <input type="text"
+                               name="lastName"
+                               ng-model="fullUser.lastName"
+                               class="form-control"
+                               style="width: 90%;"
+                               placeholder="last name"
+                               disabled>
+                        <button ng-click="status.editLastName = true;"
+                                class="btn btn-default"
+                                style="max-width: 10%;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- email -->
+            <div class="form-group">
+                <label>email</label>
+                <div style="padding: 1px;">
+                    <input ng-if="status.editEmail"
+                           type="email"
+                           name="email"
+                           ng-model="fullUser.email"
+                           class="form-control"
+                           placeholder="email address"
+                           ng-pattern="emailRegex"
+                           required>
+                    <div ng-if="!status.editEmail"
+                         class="form-inline">
+                        <input type="email"
+                               name="email"
+                               ng-model="fullUser.email"
+                               class="form-control"
+                               style="width: 90%;"
+                               placeholder="email address"
+                               ng-pattern="emailRegex"
+                               disabled>
+                        <button ng-click="status.editEmail = true;"
+                                class="btn btn-default"
+                                style="max-width: 10%;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- edit password button -->
+            <div ng-if="!status.editPassword"
+                 class="form-group">
+                <div class="form-inline">
+                    <label>password</label>
+                    <div style="padding: 1px;">
+                        <input type="password"
+                               name="fakepassword"
+                               class="form-control"
+                               style="width: 90%;"
+                               value="123456"
+                               disabled>
+                        <button ng-click="status.editPassword = true;"
+                                class="btn btn-default"
+                                style="max-width: 10%;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- edit password fields -->
+            <div ng-if="status.editPassword">
+
+                <!-- current password -->
+                <div class="form-group has-feedback">
+                    <label>current password</label>
+                    <div style="padding: 1px;">
+                        <input ng-if="!status.showPassword"
+                               type="password"
+                               name="currentPassword"
+                               ng-model="fullUser.password"
+                               class="form-control"
+                               placeholder="password">
+                        <input ng-if="status.showPassword"
+                               type="text"
+                               name="password"
+                               ng-model="fullUser.password"
+                               class="form-control"
+                               placeholder="password">
+                    </div>
+                <span ng-if="fullUser.password"
+                      ng-click="toggleShowPassword()"
+                      class="glyphicon form-control-feedback"
+                      ng-class="{'glyphicon-eye-open': !status.showPassword, 'glyphicon-eye-close': status.showPassword}"
+                      style="color: darkgray; cursor: pointer; pointer-events: all;"
+                      uib-tooltip="{{status.showPassword ? 'hide' : 'show'}}">
+                </span>
+                </div>
+
+                <!-- new password -->
+                <div class="form-group has-feedback">
+                    <label>new password</label>
+                    <div style="padding: 1px;">
+                        <input ng-if="!status.showPassword"
+                               type="password"
+                               name="newPassword"
+                               ng-model="fullUser.newPassword"
+                               class="form-control"
+                               placeholder="password">
+                        <input ng-if="status.showPassword"
+                               type="text"
+                               name="password"
+                               ng-model="fullUser.newPassword"
+                               class="form-control"
+                               placeholder="password">
+                    </div>
+                <span ng-if="fullUser.password"
+                      ng-click="toggleShowPassword()"
+                      class="glyphicon form-control-feedback"
+                      ng-class="{'glyphicon-eye-open': !status.showPassword, 'glyphicon-eye-close': status.showPassword}"
+                      style="color: darkgray; cursor: pointer; pointer-events: all;"
+                      uib-tooltip="{{status.showPassword ? 'hide' : 'show'}}">
+                </span>
+                </div>
+
+            </div>
+
+            <!-- group -->
+            <div ng-if="fullUser.group"
+                 class="form-group">
+                <label>group</label>
+
+                <!-- group drop down -->
+                <div ng-if="!status.editGroup && groups && groups.$resolved"
+                     class="form-inline">
+                    <select ng-model="fullUser.group._id"
+                            class="form-control"
+                            style="width: 90%;"
+                            name="group"
+                            disabled>
+                        <option ng-repeat="group in groups | orderBy:name"
+                                value="{{group._id}}">
+                            {{group.name}}
+                        </option>
+                    </select>
+                    <button ng-click="status.editGroup = true;"
+                            class="btn btn-default"
+                            style="max-width: 10%;">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </button>
+                </div>
+
+                <!-- group buttons -->
+                <div ng-if="status.editGroup && groups && groups.$resolved"
+                     style="display: flex; flex-direction: column;">
+                    <div ng-repeat="group in groups | orderBy: 'name'"
+                         ng-click="selectNewGroup(group)"
+                         class="btn btn-default"
+                         style="flex: 1"
+                         ng-style="{'border': (group._id.toString() === fullUser.group._id.toString()) ? 'solid' : ''}">
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="flex: 1; font-weight: bold;">
+                                {{group.name}}
+                            </div>
+                            <div style="flex: 3; text-align: left; font-size: 90%; white-space: normal;">
+                                <ul style="margin: 10px 0;">
+                                    <li>
+                                        <strong>Subject:</strong>
+                                        {{group.subject}}
+                                    </li>
+                                    <li>
+                                        <strong>Facilitator:</strong>
+                                        {{group.facilitator}}
+                                    </li>
+                                    <li>
+                                        <strong>Modules:</strong>
+                                    <span ng-repeat="module in group.modules">
+                                        {{module.name}}{{(group.modules[$index+1]) ? ', ' : ''}}
+                                    </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- role -->
+            <div ng-if="!user.admin"
+                 class="form-group">
+                <label>role</label>
+                <div style="padding: 1px;">
+                    <select ng-if="status.editRole"
+                            ng-model="fullUser.facilitator"
+                            ng-options="option.value as option.text for option in [{value: false, text: 'grader'}, {value: true, text: 'facilitator'}]"
+                            class="form-control"
+                            name="role"
+                            required>
+                    </select>
+                    <div ng-if="!status.editRole"
+                         class="form-inline">
+                        <select ng-model="fullUser.facilitator"
+                                ng-options="option.value as option.text for option in [{value: false, text: 'grader'}, {value: true, text: 'facilitator'}]"
+                                class="form-control"
+                                style="width: 90%;"
+                                name="role"
+                                disabled>
+                        </select>
+                        <button ng-click="status.editRole = true;"
+                                class="btn btn-default"
+                                style="max-width: 10%;">
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- save button -->
+            <button type="submit"
+                    class="btn btn-block btn-default"
+                    ng-class="{'btn-success': (!form.$dirty && !status.clicked) || form.$valid}"
+                    style="width: 50%; margin: 30px auto 15px;">
+                Save
+            </button>
+
+            <!-- form validation help text -->
+            <div ng-if="status.clicked && !form.$valid"
+                 class="help-block text-center small"
+                 style="color: red; margin-top: 10px;">
+                <p ng-if="!form.email.$valid">* please provide a valid email address *</p>
+                <p ng-if="!form.newPassword.$valid">* passwords must be at least 6 characters *</p>
+            </div>
+
+        </form>
+
+        <!-- loading wheel -->
+        <span ng-if="status.processing"
+              class="spinner">
+        </span>
+
+    </div>
+
+</div>

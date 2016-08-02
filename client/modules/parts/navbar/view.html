@@ -1,0 +1,105 @@
+<!-- Navigation Bar -->
+
+<nav class="navbar navbar-default"
+     style="margin-bottom: 0;">
+    <div class="container-fluid">
+
+        <!-- brand & toggle for mobile -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    ng-click="toggleNavbar()">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href ui-sref="home">
+                Alignment
+                <span ng-if="window.location.host.indexOf('localhost') > -1"
+                      style="font-weight: bold; color: cornflowerblue;">
+                    localhost
+                </span>
+                <span ng-if="window.location.host.indexOf('demo') > -1"
+                      style="font-weight: bold; color: orange;">
+                    demo
+                </span>
+            </a>
+        </div>
+
+        <!-- navbar buttons & drop down -->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+
+            <!-- navbar buttons -->
+            <ul class="nav navbar-nav">
+
+                <!-- indicators -->
+                <li ui-sref-active="active">
+                    <a href ui-sref="indicators">
+                        <i class="glyphicon glyphicon-equalizer"></i>
+                        Indicators
+                    </a>
+                </li>
+
+                <!-- modules -->
+                <li ui-sref-active="active">
+                    <a href ui-sref="modules">
+                        <i class="glyphicon glyphicon-blackboard"></i>
+                        Modules
+                    </a>
+                </li>
+
+                <!-- download -->
+                <li ui-sref-active="active">
+                    <a href ui-sref="download">
+                        <i class="glyphicon glyphicon-cloud-download"></i>
+                        Download
+                    </a>
+                </li>
+
+                <!-- admin -->
+                <li ng-if="window.location.host.indexOf('localhost') > -1 || user.name === 'Derek Soike'"
+                    ui-sref-active="active">
+                    <a href ui-sref="admin">
+                        <i class="glyphicon glyphicon-dashboard"></i>
+                        Admin
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- navbar drop down -->
+            <ul ng-if="true === false"
+                class="nav navbar-nav navbar-right">
+
+                <!-- user drop down -->
+                <li class="dropdown" uib-dropdown
+                    ng-if="user._id">
+                    <a href="#" class="dropdown-toggle" uib-dropdown-toggle
+                       uib-tooltip="{{user.admin ? 'Administrator' : (user.facilitator ? 'Facilitator' : '')}}"
+                       tooltip-placement="left">
+                        {{user.name}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                        <li><a href ui-sref="user.settings">Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" ng-click="logout($event)">Logout</a></li>
+                    </ul>
+                </li>
+
+                <!-- sign up button -->
+                <li ui-sref-active="active"
+                    ng-if="!user._id">
+                    <a href ui-sref="user.signup">Sign Up</a>
+                </li>
+
+                <!-- login button -->
+                <li ui-sref-active="active"
+                    ng-if="!user._id">
+                    <a href ui-sref="user.login">Login</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
