@@ -125,9 +125,10 @@ function convertToJson(clbk) {
 
 /**
  * MODULE.INIT
- * - Initialize modules by adding/updating mongodb modules collection.
+ * - Initialize modules from `ldc_reviews - reviews.csv`.
+ * - Add/update documents in modules collection with `spreadsheetData`.
  */
-exports.init = function(req, res) {
+exports.initFromReviews = function(req, res) {
 	logger.filename(__filename);
 
 	var savedModules = 0;
@@ -141,7 +142,7 @@ exports.init = function(req, res) {
 		}
 
 		// upsert modules
-		logger.dash('upserting modules');
+		logger.dash('upserting modules ('+modules.length+')');
 		modules.forEach(function(module, index) {
 
 			if (module && module.ldcId) {

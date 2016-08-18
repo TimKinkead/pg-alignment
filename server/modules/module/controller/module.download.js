@@ -322,6 +322,8 @@ exports.download = function(req, res) {
 					error.log(new Error('!token'));
 					return res.status(500).send('!token');
 				}
+
+				logger.bold('token: '+token);
 				
 				// download modules
 				downloadModules(moduleDocs, token);

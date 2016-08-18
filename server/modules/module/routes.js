@@ -18,10 +18,14 @@ module.exports = function(app) {
     app.route('/data/module/list')
         .get(_module.list);
     
-    // initialize modules
-    app.route('/data/module/init')
-        .get(_module.init);
+    // initialize modules from reviews spreadsheet
+    app.route('/data/module/init-from-reviews')
+        .get(_module.initFromReviews);
 
+    // initialize modules from modules.csv
+    app.route('/data/module/init-from-modules')
+        .get(_module.initFromModules);
+    
     // download modules from ldc
     app.route('/data/module/download')
         .get(_module.download);

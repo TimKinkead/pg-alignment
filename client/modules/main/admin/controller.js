@@ -16,18 +16,11 @@ angular.module('app').controller('AdminController', [
             data = $scope.data = {},
             collections = $scope.collections = [
                 'error',
-                'essay',
-                'group',
                 'module',
-                'rubric',
-                'scoresheet',
                 'user'
             ],
             initCollections = $scope.initCollections = [
-                'rubric',
-                'module',
-                'group',
-                'essay'
+                
             ];
         
         // initialize `data`
@@ -93,6 +86,16 @@ angular.module('app').controller('AdminController', [
                 .error(function(err) {
                     status['initializing'+collection] = false;
                     status.errorMessages.push('Error initializing '+collection+' collection!');
+                });
+        };
+
+        $scope.initModulesFromModules = function() {
+            $http.get('/data/module/init-from-modules', {})
+                .success(function(msg) {
+                    status.successMessages.push(msg);
+                })
+                .error(function(err) {
+                    status.errorMessages.push('Error initializing modules from modules.csv');
                 });
         };
         

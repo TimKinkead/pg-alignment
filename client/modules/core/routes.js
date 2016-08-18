@@ -124,8 +124,8 @@ angular.module('app').config([
         $stateProvider.state('admin', {
             url: '/admin',
             templateUrl: 'modules/main/admin/view.html',
-            controller: 'AdminController',
-            data: {adminOnly: true}
+            controller: 'AdminController'
+            //data: {adminOnly: true}
         });
         
     }
