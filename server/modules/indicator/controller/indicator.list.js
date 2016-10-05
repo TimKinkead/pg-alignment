@@ -4,7 +4,7 @@
 // Mongoose Models
 
 var mongoose = require('mongoose'),
-	Module = mongoose.model('Module'),
+	Indicator = mongoose.model('Indicator'),
 
 //----------------------------------------------------------------------------------------------------------------------
 // Controllers
@@ -16,26 +16,22 @@ var mongoose = require('mongoose'),
 // Main
 
 /**
- * MODULE.READ
- * - Read a module.
+ * INDICATOR.LIST
+ * - List all indicators.
  */
-exports.read = function(req, res) {
+exports.list = function(req, res) {
 	logger.filename(__filename);
 
-	if (!req.query.id) {
-		return res.status(400).send({message: '!req.query.id'});
-	}
-	
-	// get modules
-	Module.findById(req.query.id)
-		.exec(function(err, moduleDoc) {
+	// get indicators
+	Indicator.find({})
+		.exec(function(err, indicatorDocs) {
 			if (err) { 
 				err = new Error(err);
 				error.log(err); 
 				return res.status(500).send(err);
 			}
 			
-			// return module
-			return res.status(200).send(moduleDoc);
+			// return indicators
+			return res.status(200).send(indicatorDocs);
 		});
 };

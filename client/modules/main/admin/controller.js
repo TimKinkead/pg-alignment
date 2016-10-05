@@ -89,15 +89,40 @@ angular.module('app').controller('AdminController', [
                 });
         };
 
+        $scope.initIndicators = function() {
+            $http.get('/data/indicator/init', {})
+                .success(function(msg) {
+                    status.successMessages.push(msg);
+                })
+                .error(function(err) {
+                    status.errorMessages.push('Error initializing indicators.');
+                });
+        };
+
         $scope.initModulesFromModules = function() {
             $http.get('/data/module/init-from-modules', {})
                 .success(function(msg) {
                     status.successMessages.push(msg);
                 })
                 .error(function(err) {
-                    status.errorMessages.push('Error initializing modules from modules.csv');
+                    status.errorMessages.push('Error initializing modules.');
                 });
         };
         
+        $scope.initMinitasks = function() {
+            $http.get('/data/module/init-minitasks', {})
+                .success(function(msg) {
+                    status.successMessages.push(msg);
+                })
+                .error(function(err) {
+                    status.errorMessages.push('Error adding minitasks.');
+                });
+        };
+
+        $scope.downloadDatasets = function() {
+            $window.location.href = 'http://'+$window.location.host+'/data/module/download-datasets';
+            status.successMessages.push('Download in progress.');
+        };
+
     }
 ]);

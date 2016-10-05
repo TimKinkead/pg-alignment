@@ -1,0 +1,162 @@
+<!--Modules -->
+
+<!-- title -->
+<h1 class="text-center"
+    style="color: white; margin-top: 35px;">
+    Modules
+</h1>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- filter by buttons -->
+<div class="container text-center"
+     style="margin-top: 20px;">
+    <div class="btn-group">
+        <button ng-model="params.filterBy"
+                class="btn btn-filter"
+                uib-btn-radio="'manual scores'">
+            Manual Scores <span class="badge" ng-if="summary.manualScores" ng-bind="summary.manualScores|roughNumber"></span>
+        </button>
+        <button ng-model="params.filterBy"
+                class="btn btn-filter"
+                uib-btn-radio="'predicted scores'">
+            Predicted Scores <span class="badge" ng-if="summary.predictedScores" ng-bind="summary.predictedScores|roughNumber"></span>
+        </button>
+        <button ng-model="params.filterBy"
+                class="btn btn-filter"
+                uib-btn-radio="'no scores'">
+            No Scores <span class="badge" ng-if="summary.noScores" ng-bind="summary.noScores|roughNumber"></span>
+        </button>
+    </div>
+
+    <!-- summary spinner -->
+    <div ng-if="status.processingSummary"
+         class="btn-group">
+        <div class="spinner" style="height: 10px; width: 10px; margin: auto;"></div>
+    </div>
+
+    <!-- summary error message -->
+    <div ng-show="status.errorMessageSummary"
+         class="alert alert-danger"
+         style="margin: 10px 10% 0; width: 80%;"
+         role="alert">
+        {{status.errorMessageSummary}}
+    </div>
+
+</div>
+
+<!-- modules table -->
+<div class="container"
+     style="margin-top: 15px; max-width: 800px;">
+
+    <table ng-if="modules.$resolved"
+           class="table table-bordered table-hover"
+           style="background-color: white;">
+
+        <thead>
+
+        <!-- Full -->
+        <th ng-repeat="field in fields"
+            class="hidden-xs"
+            style="vertical-align: middle;"
+            ng-style="{'text-align': (field === 'title' ? 'left': 'center')}">
+            {{field|capitalize}}
+        </th>
+
+        <!-- Mobile -->
+        <th class="visible-xs">
+            <span class="text-info">Text</span><br/>
+            Something
+        </th>
+
+        </thead>
+
+        <tbody>
+
+        <tr ng-repeat="module in modules"
+            ng-init="moduleIndex = $index+1"
+            ng-class="{'last-row': $last}">
+
+            <!-- Full -->
+            <td ng-repeat="field in fields" class="hidden-xs">
+                <div ng-if="field === 'no'"
+                     style="text-align: right;">
+                    {{moduleIndex}}
+                </div>
+                <div ng-if="field === 'id'"
+                     style="text-align: center">
+                    {{module.ldcDbData.id}}
+                </div>
+                <div ng-if="field === 'title'">
+                    <a href="https://coretools.ldc.org/mods/{{module.ldcDbData.uuid}}"
+                       target="_blank"
+                       uib-tooltip="open module in new tab">
+                        {{module.ldcDbData.name}}
+                    </a>
+                </div>
+                <div ng-if="field === 'manual scores'"
+                     style="text-align: center">
+                    <i class="glyphicon glyphicon-ok"
+                       ng-if="module.hasOwnProperty('manualScores')">
+                    </i>
+                </div>
+                <div ng-if="field === 'predicted scores'"
+                     style="text-align: center">
+                    <i class="glyphicon glyphicon-ok"
+                       ng-if="module.hasOwnProperty('predictedScores')">
+                    </i>
+                </div>
+                <div ng-if="field === 'view details'"
+                     ng-click="viewDetails(module._id)"
+                     style="text-align: center; cursor: pointer;">
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                </div>
+            </td>
+
+            <!-- Mobile -->
+            <td class="visible-xs">
+                something
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+    <!-- error message -->
+    <div ng-if="status.errorMessage"
+         class="alert alert-danger" role="alert">
+        {{status.errorMessage}}
+    </div>
+
+    <!-- spinner -->
+    <div ng-if="status.processing" class="spinner"></div>
+
+</div>

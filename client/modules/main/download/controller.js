@@ -35,24 +35,10 @@ angular.module('app').controller('DownloadController', [
         // Download
         
         // download csv
-        $scope.downloadGradedWorkCSV = function() {
-            $window.location.href = 'http://'+$window.location.host+'/data/scoresheet/download';
+        $scope.downloadIndicatorCategoryDatasets = function() {
+            $window.location.href = 'http://'+$window.location.host+'/data/module/download-datasets';
             status.successMessage = 'Download in progress.';
-            removeSuccessMessage(3000);
-        };
-
-        // download tsv
-        $scope.downloadGradedWorkTSV = function() {
-            $window.location.href = 'http://'+$window.location.host+'/data/scoresheet/download?delimiter=tab';
-            status.successMessage = 'Download in progress.';
-            removeSuccessMessage(3000);
-        };
-
-        // download sri
-        $scope.downloadGradedWorkSRI = function() {
-            $window.location.href = 'http://'+$window.location.host+'/data/scoresheet/download/sri';
-            status.successMessage = 'Download in progress.';
-            removeSuccessMessage(5000);
+            removeSuccessMessage(10000);
         };
         
     }

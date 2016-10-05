@@ -29,6 +29,74 @@ var mongoose = require('mongoose'),
 //----------------------------------------------------------------------------------------------------------------------
 // Methods
 
+function convertToJson2(clbk) {
+
+	var modules = [],
+		moduleIds = [],
+		headers,
+		ignoreHeaders = ['tsv'];
+
+	// read csv file
+	fs.readFile('data/scored_modules.csv', 'utf8', function(err, data) {
+		if (err) {
+			return clbk(new Error(err));
+		}
+
+		// split csv file into lines
+		var lines = data.split('\r\n');
+		lines.forEach(function(line, lineIndex) {
+
+			var lineArray;
+
+			// parse line into array
+			try {
+				lineArray = parse(line, {delimiter: ';'})[0];
+				if (!lineArray) {
+					error.log(new Error('!lineArray at lineNo '+lineIndex));
+					return;
+				}
+			} catch(err) {
+				err.message += ' (lineNo '+lineIndex+')';
+				//console.log('end of line: ...'+line.slice(line.length-20, line.length-1));
+				//console.log(err.message);
+				error.log(err);
+			}
+
+			// grab headers
+			if (!headers && lineIndex === 0) {
+				headers = lineArray;
+				return;
+			}
+
+			// construct module object
+			var module = {};
+			for (var i=0, x=lineArray.length; i<x; i++) {
+				if (headers[i] === 'body') {
+					try {
+						module.body = JSON.parse(lineArray[i]);
+					} catch(err) {
+						error.log(new Error(err));
+						return;
+					}
+				} else if (ignoreHeaders.indexOf(headers[i]) < 0) {
+					module[headers[i]] = lineArray[i];
+				}
+			}
+
+			// add module to modules
+			if (module.uuid) {
+				if (moduleIds.indexOf(module.uuid) < 0) {
+					modules.push({ldcId: module.uuid, ldcDbData: module});
+					moduleIds.push(module.id);
+				}
+			}
+
+		});
+
+		return clbk(null, modules);
+	});
+}
+
 /**
  * CONVERT TO JSON
  * - Convert reviews spreadsheet to json.
@@ -45,7 +113,7 @@ function convertToJson(clbk) {
 
 	// initialize line reader
 	var lineReader = readline.createInterface({
-		input: fs.createReadStream('data/modules.csv') // CHANGE FILE PATH & RERUN FOR EACH!!!
+		input: fs.createReadStream('data/scored_modules.csv') // CHANGE FILE PATH & RERUN FOR EACH!!!
 	});
 
 	// handle each line of csv file
@@ -56,7 +124,7 @@ function convertToJson(clbk) {
 		}
 
 		// temp limit for testing
-		//if (lineNo > 1000) { return; }
+		//if (lineNo > 10) { return; }
 		//console.log('lineNo: '+lineNo);
 
 		// parse line into array
@@ -72,10 +140,11 @@ function convertToJson(clbk) {
 				console.log('- '+lineNo+' -');
 				console.log(line);
 			}*/
-
 		} catch(err) {
 			err.message += ' (lineNo '+lineNo+')';
-			error.log(err);
+			console.log('end of line: ...'+line.slice(line.length-20, line.length-1));
+			console.log(err.message);
+			//error.log(err);
 			return;
 		}
 
@@ -136,7 +205,7 @@ exports.initFromModules = function(req, res) {
 
 	// convert csv to json
 	logger.dash('converting csv to json');
-	convertToJson(function(err, modules) {
+	convertToJson2(function(err, modules) {
 		if (err) {
 			error.log(err);
 			return res.status(500).send(err);

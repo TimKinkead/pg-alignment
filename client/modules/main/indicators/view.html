@@ -1,0 +1,110 @@
+<!--Indicators -->
+
+<!-- title -->
+<h1 class="text-center"
+    style="color: white; margin-top: 35px;">
+    Indicators
+</h1>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 600px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- spinner -->
+<div ng-if="status.processing"
+     class="spinner">
+</div>
+
+<!-- flexbox indicators table -->
+<div ng-if="!status.processing"
+     class="container text-center"
+     style="margin-top: 20px; margin-bottom: 60px; padding: 0;">
+
+    <div ng-repeat="item in indicators.holisticCategories"
+         ng-init="itemIndex = $index"
+         style="display: flex; flex-direction: row;">
+
+        <div style="display: flex; flex: 1; align-items: center; justify-content: center; background-color: white; margin: 5px;"
+             ng-style="{'margin-top': (itemIndex === 0 ? 0 : '5px'), 'margin-bottom': (itemIndex === indicators.holisticCategories.length-1 ? 0 : '5px')}">
+            {{item.holisticCategory}}
+        </div>
+
+        <div style="flex: 14;"
+             ng-style="{'margin-top': (itemIndex === 0 ? 0 : '5px'), 'margin-bottom': (itemIndex === indicators.holisticCategories.length-1 ? 0 : '5px')}">
+            <div ng-repeat="categ in item.indicatorCategories"
+                 ng-init="categIndex = $index"
+                 style="display: flex; flex-direction: row;">
+
+                <div style="display: flex; flex: 1; align-items: center; justify-content: center; background-color: white; margin: 5px;"
+                     ng-style="{'margin-top': (categIndex === 0 ? 0 : '5px'), 'margin-bottom': (categIndex === item.indicatorCategories.length-1 ? 0 : '5px')}">
+                    {{categ.indicatorCategory}}
+                </div>
+
+                <div style="display: flex; flex: 3; align-items: center; justify-content: center; background-color: white; margin: 5px;"
+                     ng-style="{'margin-top': (categIndex === 0 ? 0 : '5px'), 'margin-bottom': (categIndex === item.indicatorCategories.length-1 ? 0 : '5px')}">
+                    <span>
+                        {{categ.guidingQuestion}}
+                    </span>
+                </div>
+
+                <div style="flex: 10;"
+                     ng-style="{'margin-top': (categIndex === 0 ? 0 : '5px'), 'margin-bottom': (categIndex === item.indicatorCategories.length-1 ? 0 : '5px')}">
+                    <div ng-repeat="indicator in categ.indicators"
+                         ng-init="indicatorIndex = $index"
+                         style="display: flex; flex-direction: row;">
+
+                        <div style="display: flex; flex: 1; align-items: center; justify-content: center; background-color: white; margin: 5px;"
+                             ng-style="{'margin-top': (indicatorIndex === 0 ? 0 : '5px'), 'margin-bottom': (indicatorIndex === categ.indicators.length-1 ? 0 : '5px')}">
+                            <a ng-click="showIndicatorDetails(indicator.id)"
+                               style="cursor: pointer;"
+                               uib-tooltip="click me">
+                                {{indicator.id}}
+                            </a>
+                        </div>
+
+                        <div style="flex: 9; margin: 5px;"
+                             ng-style="{'margin-top': (indicatorIndex === 0 ? 0 : '5px'), 'margin-bottom': (indicatorIndex === categ.indicators.length-1 ? 0 : '5px')}">
+                            <div ng-repeat="score in indicator.scores"
+                                 style="display: flex; flex-direction: row; border: solid thin;">
+
+                                <div style="padding: 5px; display: flex; flex: 1; align-items: center; justify-content: center; background-color: white;">
+                                    {{score.no}}
+                                </div>
+
+                                <div class="text-left"
+                                     style="padding: 5px; display: flex; flex: 8; align-items: center; background-color: white;">
+                                    {{score.description}}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

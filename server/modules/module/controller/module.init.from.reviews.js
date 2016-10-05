@@ -77,7 +77,7 @@ function convertToJson(clbk) {
 				scores[module.id] = {};
 			}
 			if (module.indicator_id1 && module.score1) {
-				scores[module.id][module.indicator_id1] = module.score1;
+				scores[module.id][module.indicator_id1.slice(0,4)] = module.score1;
 			}
 			
 			// grab ldc id

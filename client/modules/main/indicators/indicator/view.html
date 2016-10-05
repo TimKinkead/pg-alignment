@@ -1,0 +1,136 @@
+<!--Indicators -->
+
+<!-- title -->
+<h4 class="text-center"
+    style="color: white; margin: 35px 0 0 0;">
+    Indicator
+</h4>
+
+<!-- top bar -->
+<div style="display: flex; flex-direction: row; align-items: center; margin: 0 10px 0 10px;">
+
+    <!-- previous indicator -->
+    <div style="flex: 1;">
+        <button ng-if="params.prevIndicator"
+                ng-click="goToIndicator(params.prevIndicator)"
+                class="btn btn-default pull-left">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            {{params.prevIndicator}}
+        </button>
+    </div>
+
+    <!-- title -->
+    <div style="flex: 6;">
+        <h1 class="text-center"
+            style="color: white; margin: 0;">
+            {{params.indicatorId}}
+        </h1>
+    </div>
+
+    <!-- next indicator -->
+    <div style="flex: 1;">
+        <button ng-if="params.nextIndicator"
+                ng-click="goToIndicator(params.nextIndicator)"
+                class="btn btn-default pull-right">
+            {{params.nextIndicator}}
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </button>
+    </div>
+
+</div>
+
+<!-- messages -->
+<div ng-if="successMessages.length"
+     class="container"
+     style="max-width: 650px;">
+    <div ng-repeat="message in successMessages"
+         class="alert alert-success"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeSuccessMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+<div ng-if="errorMessages.length"
+     class="container"
+     style="max-width: 650px;">
+    <div ng-repeat="message in errorMessages"
+         class="alert alert-danger"
+         style="margin: 10px 0 0;">
+        <span ng-click="closeErrorMessage($index)"
+              class="close">
+            &times
+        </span>
+        {{message}}
+    </div>
+</div>
+
+<!-- spinner -->
+<div ng-if="status.processing"
+     class="spinner">
+</div>
+
+<!-- guiding question -->
+<div ng-if="!status.processing"
+     class="container text-center"
+     style="margin-top: 25px; max-width: 600px; color: white;">
+    <p style="margin: 0">
+        {{indicator.guidingQuestion}}
+    </p>
+</div>
+
+<!-- scores table -->
+<div ng-if="!status.processing"
+     class="container"
+     style="margin-top: 15px; padding: 0; max-width: 600px; background-color: white;">
+    <table class="table table-bordered table-hover"
+           style="margin: 0; padding: 0;">
+        <thead>
+        <th ng-repeat="header in ['Score', 'Description', 'Qty', '%']"
+            class="text-center">
+            {{header}}
+        </th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="score in indicator.scores"
+            uib-tooltip="{{(indicator.manualScores[score.no]||0)+' manually scored modules were given a '+score.no+' for indicator '+indicator.id+'.'}}">
+            <td class="text-center"
+                style="vertical-align: middle;">
+                {{score.no}}
+            </td>
+            <td>
+                {{score.description}}
+            </td>
+            <td class="text-center"
+                style="vertical-align: middle;">
+                {{indicator.manualScores[score.no] || 0}}
+            </td>
+            <td class="text-center"
+                style="vertical-align: middle;">
+                {{indicator.manualScores[score.no]/indicator.manualScores.total||0|percentage}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ml model / api buttons -->
+<div ng-if="!status.processing"
+     class="container"
+     style="margin-top: 20px; max-width: 500px;">
+    <div style="display: flex; flex-direction: row;">
+        <button ng-click="openInAzureStudio(indicator)"
+           class="btn btn-info"
+           style="flex: 1; margin-right: 5px;">
+            Open Model in Azure Studio
+        </button>
+        <button ng-click="viewApiEndpointDocs(indicator)"
+           class="btn btn-info"
+           style="flex: 1; margin-left: 5px;">
+            View Api Endpoint Docs
+        </button>
+
+    </div>
+</div>

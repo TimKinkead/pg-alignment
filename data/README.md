@@ -51,5 +51,24 @@ FROM
 
 export to csv with `CR/LF` line breaks and `;` as delimiter
 
-pgAdmin takes a shit on export, & not all rows exported (I think)
+pgAdmin takes a shit on export, & not all rows exported (I think)   
 so need to break into batches with `WHERE id >= 20000 AND id < 40000`
+
+Just get scored modules
+
+Mongo Shell
+var ids = ""
+var cur = db.modules.find({spreadsheetData: {$exists: true}}, {'spreadsheetData.id': true})
+cur.forEach(function(doc) { if (doc && doc.spreadsheetData && doc.spreadsheetData.id) { ids += (ids.length) ? ", "+doc.spreadsheetData.id : doc.spreadsheetData.id; } })
+ids
+
+Copy list of ids output to console
+
+pgAdmin Query
+SELECT
+  <see above>
+FROM 
+  coretools.mods
+WHERE
+  id IN(<paste list of ids here>)
+  

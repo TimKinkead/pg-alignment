@@ -1,0 +1,101 @@
+<!-- Module View Details Modal -->
+
+<!-- Close Modal Button -->
+<div class="modal-header">
+    <span class="close" ng-click="cancel()">&times;</span>
+    <h3 class="modal-title">Module Details</h3>
+</div>
+
+<!-- Module Info -->
+<div class="modal-body">
+
+    <!-- error message -->
+    <div ng-if="status.errorMessage"
+         class="alert alert-danger" role="alert">
+        {{status.errorMessage}}
+    </div>
+
+    <!-- spinner -->
+    <div ng-if="status.processing" class="spinner"></div>
+
+    <!-- Module Info -->
+    <div style="margin: 10px;">
+        <table class="table table-condensed"
+               style="margin-left: 10px; margin-right: 10px;">
+            <tbody>
+            <tr ng-repeat="field in fields">
+                <td style="text-align: right; border: none;">
+                    <strong>{{field|capitalize}}: </strong>
+                </td>
+                <td ng-if="field === 'id'"
+                    style="border: none;">
+                    {{moduleDoc.ldcDbData.id}}
+                </td>
+                <td ng-if="field === 'title'"
+                    style="border: none;">
+                    {{moduleDoc.ldcDbData.name}}
+                </td>
+                <td ng-if="field === 'description'"
+                    style="border: none;">
+                    {{moduleDoc.ldcDbData.description}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- buttons -->
+    <div ng-if="moduleDoc && moduleDoc.$resolved"
+         class="row"
+         style="margin: 20px 10px;">
+        <div class="col-xs-6" style="padding: 0 5px 0 0;">
+            <a class="btn btn-block btn-info"
+               href="https://coretools.ldc.org/mods/{{moduleDoc.ldcDbData.uuid}}"
+               target="_blank">
+                Open Module in New Tab
+            </a>
+        </div>
+        <div class="col-xs-6" style="padding: 0 0 5px 0;">
+            <button ng-click="getScores()"
+                    class="btn btn-block btn-success">
+                Run Score Prediction
+            </button>
+        </div>
+    </div>
+
+    <!-- Scores -->
+    <table class="table text-center"
+           style="margin-top: 20px;">
+        <thead>
+            <th ng-repeat="header in scoreFields"
+                class="text-center"
+                style="vertical-align: middle">
+                <strong>{{header|capitalize}}</strong>
+            </th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="indicator in indicators"
+                ng-init="i=$index"
+                ng-style="{'border-top-style': (!indicators[i-1] || indicators[i-1].slice(0,3) !== indicator.slice(0,3)) ? 'solid' : ''}">
+                <td ng-repeat="field in scoreFields"
+                    style="vertical-align: middle">
+                    <div ng-if="field === 'indicator'">
+                        {{indicator}}
+                    </div>
+                    <div ng-if="field === 'manual score'">
+                        {{moduleDoc.manualScores[indicator] || '-'}}
+                    </div>
+                    <div ng-if="field === 'predicted score'">
+                        <div ng-if="status['processing-'+indicator]"
+                             class="spinner-sm"
+                             style="margin: auto;">
+                        </div>
+                        <div ng-if="!status['processing-'+indicator]">
+                             {{moduleDoc.predictedScores[indicator] || '-'}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

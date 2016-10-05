@@ -110,6 +110,28 @@ angular.module('app').config([
             data: {memberOnly: true}
         });*/
 
+        // -- Indicators --
+
+        $stateProvider.state('indicators', {
+            url: '/indicators',
+            templateUrl: 'modules/main/indicators/view.html',
+            controller: 'IndicatorsController'
+        });
+
+        $stateProvider.state('indicator', {
+            url: '/indicators/:indicator',
+            templateUrl: 'modules/main/indicators/indicator/view.html',
+            controller: 'IndicatorController'
+        });
+
+        // -- Modules --
+
+        $stateProvider.state('mods', {
+            url: '/mods',
+            templateUrl: 'modules/main/modules/view.html',
+            controller: 'ModulesController'
+        });
+
         // -- Download --
 
         $stateProvider.state('download', {
